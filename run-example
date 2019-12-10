@@ -9,5 +9,5 @@ if [ -z ${1+x} ]; then
     exit 1
 fi
 
-nixos-rebuild -I nixos-config=$DIR/example.nix build-vm
+nixos-rebuild -I nixos-config=$DIR/configuration.nix build-vm
 QEMU_NET_OPTS="hostfwd=tcp::$1-:3000" ./result/bin/run-*-vm
