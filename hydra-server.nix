@@ -4,7 +4,7 @@
     enableRollback = true;
   };
 
-  hydra-server = {
+  hydra-server = {pkgs, ...}: {
     imports = [./. ];
 
     users.users.root.hashedPassword = (builtins.readFile
@@ -32,6 +32,9 @@
     simple-hydra.hostName = "hydra.tylerbenster.com";
     simple-hydra.useNginx = false;
 
-    # networking.firewall.allowedTCPPorts = [ 3000 ];
+    environment.systemPackages = with pkgs; [
+      htop
+      vim
+    ];
   };
 }

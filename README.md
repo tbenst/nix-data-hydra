@@ -30,3 +30,14 @@ command line.
 ```bash
 hydra-create-user USERNAME --full-name 'FULL NAME' --email-address 'EMAIL' --password 12345 --role admin
 ```
+
+## Nixops
+To create (do once):
+```
+nixops create ./hydra-server.nix ./hydra-server-ec2.nix -d hydra-server-ec2
+```
+
+To deploy (to update config):
+```
+nixops deploy -d hydra-server-ec2
+```
