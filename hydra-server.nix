@@ -27,6 +27,15 @@
     #     maxJobs = 1;
     #   }
     # ];
+    nix.extraOptions = ''
+      allowed-uris = https://github.com/tbenst/nixpkgs/archive/
+    '';
+    simple-hydra = {
+      enable = true;
+      hostName = "hydra.tylerbenster.com";
+      useNginx = true;
+      localBuilder.maxJobs = 2;
+    };
 
     simple-hydra.enable = true;
     simple-hydra.hostName = "hydra.tylerbenster.com";
@@ -36,5 +45,7 @@
       htop
       vim
     ];
+
+    networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 }
