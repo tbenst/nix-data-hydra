@@ -19,7 +19,7 @@ let
     deployment.ec2.keyPair = resources.ec2KeyPairs.my-key-pair;
     deployment.ec2.associatePublicIpAddress = true;
     deployment.ec2.ebsBoot = true;
-    deployment.ec2.ebsInitialRootDiskSize = 20;
+    deployment.ec2.ebsInitialRootDiskSize = 100;
     deployment.ec2.elasticIPv4 = resources.elasticIPs.eip;
     deployment.ec2.securityGroupIds = [ "allow-ssh" "allow-http" ];
 

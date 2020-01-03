@@ -33,3 +33,14 @@ mkdir /var/lib/hydra/.ssh
 ssh-keygen -t rsa -b 4096 -C "hydra@tylerbenster.com" -f /var/lib/hydra/.ssh/id_rsa
 chown hydra:hydra /var/lib/hydra/.ssh/id_rsa*
 ```
+
+## Nixops
+To create (do once):
+```
+nixops create ./hydra-server.nix ./hydra-server-ec2.nix -d hydra-server-ec2
+```
+
+To deploy (to update config):
+```
+nixops deploy -d hydra-server-ec2
+```
