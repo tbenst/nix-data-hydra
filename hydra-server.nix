@@ -34,8 +34,14 @@
       enable = true;
       hostName = "hydra.tylerbenster.com";
       useNginx = true;
-      localBuilder.maxJobs = 2;
+      localBuilder.maxJobs = 1;
     };
+
+    environment.systemPackages = with pkgs; [
+      htop
+      iotop
+      vim
+    ];
 
     networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   };

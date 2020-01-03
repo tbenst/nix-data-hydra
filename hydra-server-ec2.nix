@@ -15,7 +15,7 @@ let
     deployment.ec2.accessKeyId = accessKeyId;
     deployment.ec2.region = region;
     deployment.ec2.subnetId = resources.vpcSubnets.nixops-vpc-subnet-c;
-    deployment.ec2.instanceType = "t2.medium";
+    deployment.ec2.instanceType = "t2.xlarge";
     deployment.ec2.keyPair = resources.ec2KeyPairs.my-key-pair;
     deployment.ec2.associatePublicIpAddress = true;
     deployment.ec2.ebsBoot = true;
