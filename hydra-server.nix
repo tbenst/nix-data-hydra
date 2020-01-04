@@ -23,7 +23,7 @@
           maxJobs = 8;
           sshKey = "/var/lib/hydra/.ssh/id_rsa";
           sshUser = "hydra";
-          system = "i86_64-linux";
+          system = "x86_64-linux";
         }
       ];
 
@@ -56,11 +56,12 @@
       vim
     ];
 
-      services.openssh = {
-        enable = true;
-        passwordAuthentication = false;
-      };
+    services.openssh = {
+      enable = true;
+      passwordAuthentication = false;
+    };
 
+    services.fail2ban.enable = true;
 
     networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   };
