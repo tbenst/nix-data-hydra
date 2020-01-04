@@ -4,7 +4,7 @@
     enableRollback = true;
   };
 
-  hydra-server = {pkgs, ...}: {
+  hydra-server = {pkgs, lib, ...}: {
     imports = [./. ];
 
     users.users.root.hashedPassword = (builtins.readFile
@@ -17,19 +17,20 @@
     #   writableStoreUseTmpfs = false;
     # };
 
-    # Uncomment and fill in to support remote builders, like macOS.
-    # nix.buildMachines = [
-    #   {
-    #     hostName = "<host>";
-    #     sshUser = "<uxer>";
-    #     sshKey = "<path to key>";
-    #     system = "x86_64-darwin";
-    #     maxJobs = 1;
-    #   }
-    # ];
     nix = {
+      buildMachines = [
+        { hostName = "perkeep.mooch.rip";
+          maxJobs = 8;
+          sshKey = "/var/lib/hydra/.ssh/id_rsa";
+          sshUser = "hydra";
+          system = "i86_64-linux";
+        }
+      ];
+
+      distributedBuilds = true;
+
       extraOptions = ''
-        allowed-uris = https://github.com/tbenst/nixpkgs/archive/
+        allowed-uris = https://github.com/tbenst/nixpkgs/archive/ https://github.com/NixOS/nixpkgs-channels/archive/
       '';
       # TODO: distribute publicly
       # until distribution licenses are sorted out, private only for legality
@@ -49,16 +50,17 @@
       # storeUri = "s3://nix-cache?secret-key=/var/lib/hydra/queue-runner/keys/cache.nixos.org-1/secret&write-nar-listing=1&ls-compression=br&log-compression=br"
     };
 
-
-    simple-hydra.enable = true;
-    simple-hydra.hostName = "hydra.tylerbenster.com";
-    simple-hydra.useNginx = false;
-
     environment.systemPackages = with pkgs; [
       htop
       iotop
       vim
     ];
+
+      services.openssh = {
+        enable = true;
+        passwordAuthentication = false;
+      };
+
 
     networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   };
