@@ -17,7 +17,17 @@
     #   writableStoreUseTmpfs = false;
     # };
 
-    nixpkgs.config.allowUnfree = true;
+    nixpkgs.config = {
+      whitelistedLicenses = with lib.licenses; [
+        unfreeRedistributable
+        issl
+      ];
+      
+      allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+        "cudnn_cudatoolkit"
+        "cudatoolkit"
+      ];
+    };
 
     nix = {
       buildMachines = [
