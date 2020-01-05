@@ -111,6 +111,7 @@
       smtpHost = "localhost";
       extraConfig = ''
         store_uri = ${config.simple-hydra.store_uri}
+        max_output_size = ${ 4 * 1024 * 1024 * 1024 }
       ''; 
     };
 
