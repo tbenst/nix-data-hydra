@@ -21,7 +21,7 @@
       buildMachines = [
         { hostName = "perkeep.mooch.rip";
           maxJobs = 8;
-          sshKey = "/var/lib/hydra/.ssh/id_rsa";
+          sshKey = "/var/lib/hydra/.ssh/perkeep_rsa";
           sshUser = "hydra";
           system = "x86_64-linux";
         }
@@ -31,6 +31,7 @@
 
       extraOptions = ''
         allowed-uris = https://github.com/tbenst/nixpkgs/archive/ https://github.com/NixOS/nixpkgs-channels/archive/
+        builders-use-substitutes = true
       '';
       # TODO: distribute publicly
       # until distribution licenses are sorted out, private only for legality
