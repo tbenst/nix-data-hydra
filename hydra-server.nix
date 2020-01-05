@@ -17,6 +17,8 @@
     #   writableStoreUseTmpfs = false;
     # };
 
+    nixpkgs.config.allowUnfree = true;
+
     nix = {
       buildMachines = [
         { hostName = "perkeep.mooch.rip";
@@ -54,6 +56,7 @@
     environment.systemPackages = with pkgs; [
       htop
       iotop
+      ncdu
       vim
     ];
 
