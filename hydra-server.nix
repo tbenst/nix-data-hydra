@@ -54,7 +54,7 @@
     };
     simple-hydra = {
       enable = true;
-      hostName = "hydra.tylerbenster.com";
+      hostName = "hydra.nix-data.org";
       useNginx = true;
       localBuilder.maxJobs = 1;
       # TODO use S3 for binary caching
@@ -64,9 +64,11 @@
     };
 
     environment.systemPackages = with pkgs; [
+      git
       htop
       iotop
       ncdu
+      tmux
       vim
     ];
 

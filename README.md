@@ -30,8 +30,8 @@ command line. For use with private repos, also need to generate an ssh key.
 ```bash
 hydra-create-user USERNAME --full-name 'FULL NAME' --email-address 'EMAIL' --password 12345 --role admin
 mkdir /var/lib/hydra/.ssh
-ssh-keygen -t rsa -b 4096 -C "hydra@tylerbenster.com" -f /var/lib/hydra/.ssh/id_rsa
-ssh-keygen -t rsa -b 4096 -C "hydra-queue-runner@tylerbenster.com" -f /var/lib/hydra/.ssh/runner_rsa
+ssh-keygen -t rsa -b 4096 -C "hydra@nix-data.org" -f /var/lib/hydra/.ssh/id_rsa
+ssh-keygen -t rsa -b 4096 -C "hydra-queue-runner@nix-data.org" -f /var/lib/hydra/.ssh/runner_rsa
 chown hydra:hydra /var/lib/hydra/.ssh/id_rsa*
 chown hydra-queue-runner:hydra-queue-runner /var/lib/hydra/.ssh/runner_rsa*
 ```
