@@ -110,7 +110,7 @@
       useSubstitutes = true;
       smtpHost = "localhost";
       extraConfig = ''
-        store_uri = ${config.simple-hydra.store_uri}?compression=none
+        store_uri = ${config.simple-hydra.store_uri}&compression=none
         max_output_size = ${builtins.toString (16 * 1024 * 1024 * 1024)}
       ''; 
     };
