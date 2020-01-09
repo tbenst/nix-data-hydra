@@ -49,7 +49,7 @@
       # until distribution licenses are sorted out, private only for legality
       sshServe = {
         enable = true;
-        keys = lib.splitString "\n" (builtins.readFile /Computer/home/ssh/authorized_keys);
+        keys = lib.splitString "\n" (builtins.readFile ./secrets/nix-ssh_pub.key);
       };
     };
     simple-hydra = {
