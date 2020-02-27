@@ -42,7 +42,7 @@
       distributedBuilds = true;
 
       extraOptions = ''
-        allowed-uris = https://github.com/tbenst/nixpkgs/archive/ https://github.com/NixOS/nixpkgs-channels/archive/
+        allowed-uris = https://github.com/tbenst/nixpkgs/archive/ https://github.com/NixOS/nixpkgs-channels/archive/ https://github.com/NixOS/nixpkgs/archive/
         builders-use-substitutes = true
       '';
       # TODO: distribute publicly
