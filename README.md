@@ -47,4 +47,10 @@ To deploy (to update config):
 nixops deploy -d hydra-server-ec2
 ```
 
+To change instance type after modifying `hydra-server-ec2.nix`:
+```
+nixops stop -d hydra-server-ec2
+nixops deploy -d hydra-server-ec2
+```
+
 ## Build slaves
