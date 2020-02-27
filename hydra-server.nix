@@ -64,10 +64,12 @@
     };
 
     environment.systemPackages = with pkgs; [
+      fd
       git
       htop
       iotop
       ncdu
+      nethogs
       tmux
       vim
     ];
