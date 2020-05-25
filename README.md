@@ -54,3 +54,14 @@ nixops deploy -d hydra-server-ec2
 ```
 
 ## Build slaves
+
+## TODO:
+2020-05-25:
+```
+trace: warning: You're currently deploying an older version of Hydra which is needed to
+make some required database changes[1]. As soon as this is done, it's recommended
+to run `hydra-backfill-ids` and set `services.hydra.package` to `pkgs.hydra-unstable`
+after that.
+
+[1] https://github.com/NixOS/hydra/pull/711
+```
