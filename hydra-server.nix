@@ -29,7 +29,7 @@
       # /nix/store/b99z3kgnxq8iilim11w3k07g998pxb8s-cachix-0.3.7/bin/cachix -c /etc/cachix/cachix.dhall push nix-data /nix/store/2hcfz7zm7c0423vzs0va1z3khw8r263v-hello-2.10
       export HOME=/root
       touch /tmp/ty_precachix
-      exec ${cachix}/bin/cachix -c /etc/cachix/cachix.dhall push nix-data $NO_CUDA_PATHS
+      exec ${cachix}/bin/cachix -c /etc/cachix/cachix.dhall push nix-data $NO_CUDA_PATHS > /tmp/ty_cachix 2>&1
       # ${cachix}/bin/cachix > /tmp/ty_cachix 2>&1
       touch /tmp/ty_finished
       exit 0
