@@ -8,18 +8,28 @@
     upload_to_cachix = pkgs.writeScriptBin "upload-to-cachix"
       # TODO: add || return 2,3,4, etc to see where erroring?
       ''#!/bin/sh
-      echo $OUT_PATHS > /tmp/posthook_out_paths
+      echo $OUT_PATHS > /tmp/ty_out_paths
       set -eu
       set -f # disable globbing
       export IFS=' '
+
+      # skip push if the declarative job spec
+      OUT_END=$(echo ''${OUT_PATHS: -10})
+      if [ "$OUT_END" == "-spec.json" ]; then
+        exit 0
+      fi
 
       # filter out CUDA to avoind possible license issues
       # https://github.com/NixOS/nixpkgs/pull/76233
       export NO_CUDA_PATHS=$(echo -e $OUT_PATHS | sed 's/\s\+/ \n/g' | grep -v cuda | tr -d '\n')
       export FILTERED_PATHS=$(echo -e $OUT_PATHS | sed 's/\s\+/ \n/g' | grep cuda | tr -d '\n')
-      echo -e "Ignored the following paths (may be none):\n" $FILTERED_PATHS
-      echo -e "Uploading paths:\n" $OUT_PATHS
-      exec ${cachix}/bin/cachix -c /etc/cachix/cachix.dhall push nix-data $NO_CUDA_PATHS
+      echo -e "Ignored the following paths (may be none):\n" $FILTERED_PATHS > /tmp/ty_ignore_paths
+      echo -e "Uploading paths:\n" $OUT_PATHS > /tmp/ty_upload_paths
+      echo -e "executing command:" ${cachix}/bin/cachix -c /etc/cachix/cachix.dhall push nix-data $NO_CUDA_PATHS > /tmp/ty_cmd
+      # exec ${cachix}/bin/cachix -c /etc/cachix/cachix.dhall push nix-data $NO_CUDA_PATHS
+      /nix/store/b99z3kgnxq8iilim11w3k07g998pxb8s-cachix-0.3.7/bin/cachix -c /etc/cachix/cachix.dhall push nix-data /nix/store/2hcfz7zm7c0423vzs0va1z3khw8r263v-hello-2.10
+      touch /tmp/ty_finished
+      exit 0
       '';
 
     cachix = import (pkgs.fetchFromGitHub {
