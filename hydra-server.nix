@@ -4,7 +4,40 @@
     enableRollback = true;
   };
 
-  hydra-server = {pkgs, lib, ...}: {
+  hydra-server = {pkgs, lib, ...}: let
+    upload_to_cachix = pkgs.writeScriptBin "upload-to-cachix"
+      # TODO: add || return 2,3,4, etc to see where erroring?
+      ''#!/bin/sh
+      echo $OUT_PATHS > /tmp/ty_out_paths
+      set -eu
+      set -f # disable globbing
+      export IFS=' '
+
+      # skip push if the declarative job spec
+      OUT_END=$(echo ''${OUT_PATHS: -10})
+      if [ "$OUT_END" == "-spec.json" ]; then
+        exit 0
+      fi
+
+      # filter out CUDA to avoind possible license issues
+      # https://github.com/NixOS/nixpkgs/pull/76233
+      export NO_CUDA_PATHS=$(echo -e $OUT_PATHS | sed 's/\s\+/ \n/g' | grep -v cuda | tr -d '\n')
+      export FILTERED_PATHS=$(echo -e $OUT_PATHS | sed 's/\s\+/ \n/g' | grep cuda | tr -d '\n')
+      echo -e "Ignored the following paths (may be none):\n" $FILTERED_PATHS > /tmp/ty_ignore_paths
+      echo -e "Uploading paths:\n" $OUT_PATHS > /tmp/ty_upload_paths
+      echo -e "executing command:" ${cachix}/bin/cachix -c /etc/cachix/cachix.dhall push nix-data $NO_CUDA_PATHS > /tmp/ty_cmd
+      export HOME=/root
+      touch /tmp/ty_precachix
+      exec ${cachix}/bin/cachix -c /etc/cachix/cachix.dhall push nix-data $NO_CUDA_PATHS > /tmp/ty_cachix 2>&1
+      '';
+
+    cachix = import (pkgs.fetchFromGitHub {
+      owner = "cachix";
+      repo = "cachix";
+      rev = "26264f748d25284a2ea762aec7c40eab0412b4b2";
+      sha256 = "0dy87imh4pg1kjm0ricvzk8gzvl66j08wyr2m3qfxypqbf7s5nyk";
+    });
+  in {
     imports = [./. ];
 
     users.users.root.hashedPassword = (builtins.readFile
@@ -29,14 +62,16 @@
       ];
     };
 
+    environment.etc."cachix/cachix.dhall".source = ./secrets/cachix.dhall;
+
     nix = {
       buildMachines = [
-        { hostName = "perkeep.mooch.rip";
-          maxJobs = 8;
-          sshKey = "/var/lib/hydra/.ssh/perkeep_rsa";
-          sshUser = "hydra";
-          system = "x86_64-linux";
-        }
+        # { hostName = "perkeep.mooch.rip";
+        #   maxJobs = 8;
+        #   sshKey = "/var/lib/hydra/.ssh/perkeep_rsa";
+        #   sshUser = "hydra";
+        #   system = "x86_64-linux";
+        # }
       ];
 
       distributedBuilds = true;
@@ -44,6 +79,7 @@
       extraOptions = ''
         allowed-uris = https://github.com/tbenst/nixpkgs/archive/ https://github.com/NixOS/nixpkgs-channels/archive/ https://github.com/NixOS/nixpkgs/archive/
         builders-use-substitutes = true
+        post-build-hook = ${upload_to_cachix}/bin/upload-to-cachix
       '';
       # TODO: distribute publicly
       # until distribution licenses are sorted out, private only for legality
@@ -64,6 +100,7 @@
     };
 
     environment.systemPackages = with pkgs; [
+      cachix
       fd
       git
       htop
@@ -71,6 +108,7 @@
       ncdu
       nethogs
       tmux
+      upload_to_cachix
       vim
     ];
 
@@ -80,6 +118,11 @@
     };
 
     services.fail2ban.enable = true;
+
+    security.acme = {
+      email = "nix-data@tylerbenster.com";
+      acceptTerms = true;
+    };
 
     networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   };
